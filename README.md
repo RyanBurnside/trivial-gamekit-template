@@ -1,7 +1,6 @@
 # trivial-gamekit-template
-### _Your Name <your.name@example.com>_
 
-This is a project to do ... something.
+This is a sample template to get you up and running quickly with borodust's trivial-gamekit.
 
 ## License
 
