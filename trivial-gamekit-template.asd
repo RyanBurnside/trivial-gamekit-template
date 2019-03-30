@@ -8,4 +8,5 @@
   :serial t
   :depends-on (trivial-gamekit)
   :components ((:file "package")
-               (:file "trivial-gamekit-template")))
+               (:file "trivial-gamekit-template")
+	       (:file "misc")))

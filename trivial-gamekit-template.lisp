@@ -9,7 +9,11 @@
 ;; These get updated when the game loops
 (defparameter *mouse-x* 0)
 (defparameter *mouse-y* 0)
+(defun get-mouse-pos ()
+  (gamekit:vec2 *mouse-x* *mouse-y*))
+
 (defconstant TAU (* 2.0 PI))
+
 ;; We'll assume a very simple game, tear these out if you're storing score
 ;; on a per instance basis (remove em from the draw loop too)
 (defparameter *score* 0)
@@ -17,6 +21,8 @@
 
 (defun center-x () (/ +screen-width+ 2.0))
 (defun center-y () (/ +screen-height+ 2.0))
+(defun get-screen-center ()
+  (gamekit:vec2 (center-x) (center-y)))
 
 (defun clear-scores (&optional(table-size 10))
   (setf *score-table* (loop
@@ -90,6 +96,7 @@
 
 (defmethod gamekit:draw ((this example))
   "We redefine the draw method here, YOU ONLY CALL DRAWING FROM HERE"
+
   (gamekit:draw-text
    (concatenate 'string
 		"Keys Pressed: "
@@ -114,9 +121,21 @@
     (gamekit:draw-text (format nil "Lives: ~A" *lives*)
 		       (gamekit:vec2 0 (ty 68)))
 
-    (gamekit:draw-circle (gamekit:vec2 *mouse-x* *mouse-y*)
-			 32
-			 :fill-paint (gamekit:vec4 1 1 0 1)
-			 :stroke-paint (gamekit:vec4 0 .3 1 1)))
+    (let* ((pos1 (get-mouse-pos))
+	   (pos2 (get-screen-center))
+	   (radius1 32)
+	   (radius2 128)
+	     
+	   (color (if (circles-overlap-p pos1 radius1 pos2 radius2)
+		      (gamekit:vec4 1 0 0 1)
+		      (gamekit:vec4 0 1 0 1))))
+
+      (gamekit:draw-circle pos2 radius2
+			   :fill-paint color
+			   :stroke-paint  (gamekit:vec4 0 .3 1 1))
+      
+      (gamekit:draw-circle pos1 radius1
+			   :fill-paint color
+			   :stroke-paint (gamekit:vec4 0 .3 1 1))))
   
 (gamekit:start 'example)
